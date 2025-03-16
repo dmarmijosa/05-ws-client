@@ -1,12 +1,19 @@
 import { Manager, Socket } from "socket.io-client";
 
-export const connectToServer = () => {
-  const manager = new Manager("http://localhost:3000/socket.io/socket.io.js");
-  const socket = manager.socket("/");
-  addListener(socket);
+let socket: Socket;
+export const connectToServer = (token:string) => {
+  const manager = new Manager("http://localhost:3000/socket.io/socket.io.js",{
+    extraHeaders: {
+      hola: "mundo",
+      authentication: token,
+    },
+  });
+  socket?.removeAllListeners();
+  socket = manager.socket("/");
+  addListener();
 };
 
-const addListener = (socket: Socket) => {
+const addListener = () => {
   const serverStatusLabel = document.querySelector("#server-status")!;
   const ul = document.querySelector<HTMLUListElement>("#clients-ul")!;
 
